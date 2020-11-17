@@ -3,7 +3,6 @@ from pptree import *
 def TopDownParsing(nonTerminal,terminal,initialState,productions,queue,string,depth,Tree):
     print("TopDownParsing Method")
     dicDepth = {}
-    niceTree = {}
     queue.append(initialState)
     dicDepth[initialState] = 0
     devide = []
@@ -56,7 +55,8 @@ def TopDownParsing(nonTerminal,terminal,initialState,productions,queue,string,de
     else:
         print("----------------String not accepted----------------")   
     #print nice tree (missing)
-    print_tree(Tree,initialState)
+    print_tree_method(Tree,initialState)
+    
 
 
 def listToString(devide):  
@@ -73,24 +73,24 @@ def append_value(dict_obj, key, value):
     else:
         dict_obj[key] = [value]
 
-def listToStringTree(devide):  
-    str1 = ""    
-    for x in devide:  
-        str1 += x + "  "    
-    return str1
-
-def print_tree(Tree, initialState):
-    temp = ""
-    temp = initialState
-    print(initialState)
-    temp = Node(initialState)
+def print_tree_method(Tree, initialState):
+    print(Tree)    
     for key in Tree:
-        for j in key:
-            print(j)
-            temp = j
-            temp = Node(j,key)
+        if key == initialState:
+            tempRootInitial = Node(key)
+        else:
+            tempRoot = Node(key)  
+        for j in Tree[key]:
+            if key == initialState:
+                temp = j
+                temp = Node(j,tempRootInitial)
+            else:
+                temp = j
+                temp = Node(j,tempRoot) 
+           
+
+    print_tree(tempRootInitial)
     
-    print_tree(initialState)
 
 print("Select the text file (e.g. test1, test2,test3,test4)")
 txtVal = input()
