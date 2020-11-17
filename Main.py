@@ -51,11 +51,13 @@ def TopDownParsing(nonTerminal,terminal,initialState,productions,queue,string,de
                 done = True  
                    
     if string == uwv:
-        print("----------------String accepted----------------")
+        print("------------------String accepted------------------")
     else:
-        print("----------------String not accepted----------------")   
+        print("----------------String NOT accepted----------------")   
     #print nice tree (missing)
-    print_tree_method(Tree,initialState)
+    tempRoot = Node(initialState)
+    print_tree_method_recursive(Tree,initialState,tempRoot)
+    print_tree(tempRoot,horizontal=True)
     
 
 
@@ -79,18 +81,26 @@ def print_tree_method(Tree, initialState):
         if key == initialState:
             tempRootInitial = Node(key)
         else:
-            tempRoot = Node(key)  
+            for k in Tree:
+                if key in Tree[k]:
+                    tempRoot = Node(key)  
         for j in Tree[key]:
             if key == initialState:
                 temp = j
-                temp = Node(j,tempRootInitial)
+                j = Node(j,tempRootInitial)
             else:
                 temp = j
-                temp = Node(j,tempRoot) 
+                j = Node(j,tempRoot) 
            
 
-    print_tree(tempRootInitial)
-    
+    print_tree(tempRootInitial)  
+
+def print_tree_method_recursive(Tree,key,parent):
+    for x in Tree:
+        for j in Tree[x]:
+            if x == key:
+                nod = Node(j,parent)
+                print_tree_method_recursive(Tree,j,nod)
 
 print("Select the text file (e.g. test1, test2,test3,test4)")
 txtVal = input()
