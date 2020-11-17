@@ -6,8 +6,9 @@ def TopDownParsing(nonTerminal,terminal,initialState,productions,queue,string,de
     queue.append(initialState)
     dicDepth[initialState] = 0
     devide = []
+    found = False
     uwv = ""
-    while queue and string != uwv:
+    while queue and not found:
         q = queue.pop(0)
         if dicDepth[q] + 1 > depth:
             break
@@ -16,41 +17,42 @@ def TopDownParsing(nonTerminal,terminal,initialState,productions,queue,string,de
         for x in range(len(q)):
             if q[x].isupper():
                 q = q.partition(q[x])
-                break
-            
-        
-        while not done and uwv != string:
-            if isinstance(productions[q[1]], list): 
-                for j in productions[q[1]]:
-                    devide.clear()
-                    w = j
-                    checkIfmatches = q[0]
-                    devide.append(q[0])
-                    devide.append(w)
-                    devide.append(q[2])
-                    uwv = listToString(devide)
-                    allTerminal = 0
-                    for minus in range(len(uwv)):
-                        if uwv[minus] in terminal:
-                            allTerminal = allTerminal + 1
-                    matches = True
-                    for x in range(len(checkIfmatches)):
-                        if len(checkIfmatches) > len(string):
-                            matches = False
-                            break
-                        elif checkIfmatches[x] != string[x]:
-                            matches = False
-                            break
-                            
-                    if allTerminal < len(uwv) and matches:
-                        queue.append(uwv)
-                        append_value(Tree,listToString(q),uwv)
-                        dicDepth[uwv] = dicDepth[listToString(q)] + 1
-                    elif matches:
-                        append_value(Tree,listToString(q),uwv)          
-                done = True  
+                break      
+        while not done and not found:
+            for j in productions[q[1]]:
+                devide.clear()
+                w = j
+                checkIfmatches = q[0]
+                devide.append(q[0])
+                devide.append(w)
+                devide.append(q[2])
+                uwv = listToString(devide)
+                allTerminal = 0
+                for minus in range(len(uwv)):
+                    if uwv[minus] in terminal:
+                        allTerminal = allTerminal + 1
+                matches = True
+                for x in range(len(checkIfmatches)):
+                    if len(checkIfmatches) > len(string):
+                        matches = False
+                        break
+                    elif checkIfmatches[x] != string[x]:
+                        matches = False
+                        break        
+                if allTerminal < len(uwv) and matches:
+                    queue.append(uwv)
+                    append_value(Tree,listToString(q),uwv)
+                    dicDepth[uwv] = dicDepth[listToString(q)] + 1
+                    if uwv == string:
+                        found = True
+
+                elif matches:
+                    append_value(Tree,listToString(q),uwv)
+                    if uwv == string:
+                        found = True          
+            done = True  
                    
-    if string == uwv:
+    if found:
         print("------------------String accepted------------------")
     else:
         print("----------------String NOT accepted----------------")   
@@ -74,26 +76,6 @@ def append_value(dict_obj, key, value):
         dict_obj[key].append(value)
     else:
         dict_obj[key] = [value]
-
-def print_tree_method(Tree, initialState):
-    print(Tree)    
-    for key in Tree:
-        if key == initialState:
-            tempRootInitial = Node(key)
-        else:
-            for k in Tree:
-                if key in Tree[k]:
-                    tempRoot = Node(key)  
-        for j in Tree[key]:
-            if key == initialState:
-                temp = j
-                j = Node(j,tempRootInitial)
-            else:
-                temp = j
-                j = Node(j,tempRoot) 
-           
-
-    print_tree(tempRootInitial)  
 
 def print_tree_method_recursive(Tree,key,parent):
     for x in Tree:
